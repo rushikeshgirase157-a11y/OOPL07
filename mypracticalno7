@@ -1,0 +1,165 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
+// Product class
+class Product {
+ int id;
+ String name;
+ double price;
+ Product(int id, String name, double price) {
+ this.id = id;
+ this.name = name;
+ this.price = price;
+ }
+ void display() {
+ System.out.println(id + "\t" + name + "\tRs. " + price);
+ }
+}
+// Sort products by price
+class PriceComparator implements Comparator<Product> {
+ public int compare(Product p1, Product p2) {
+ return Double.compare(p1.price, p2.price);
+ }
+}
+// Sort products by name
+class NameComparator implements Comparator<Product> {
+ public int compare(Product p1, Product p2) {
+ return p1.name.compareToIgnoreCase(p2.name);
+ }
+}
+// Main class
+public class Main {
+ public static void main(String[] args) {
+ Scanner sc = new Scanner(System.in);
+ ArrayList<Product> products = new ArrayList<>();
+ int choice;
+ do {
+ System.out.println("\n===== PRODUCT INVENTORY SYSTEM =====");
+ System.out.println("1. Add Product");
+ System.out.println("2. Update Product Price");
+System.out.println("3. Remove Product");
+ System.out.println("4. Display Products");
+ System.out.println("5. Sort by Price");
+ System.out.println("6. Sort by Name");
+ System.out.println("7. Exit");
+ System.out.print("Enter your choice: ");
+ choice = sc.nextInt();
+ switch (choice) {
+ case 1: {
+ System.out.print("Enter Product ID: ");
+ int id = sc.nextInt();
+ // Check for duplicate ID
+ boolean exists = false;
+ for (Product p : products) {
+ if (p.id == id) {
+ exists = true;
+ break;
+ }
+ }
+ if (exists) {
+ System.out.println("Product ID already exists!");
+ break;
+ }
+sc.nextLine();
+ System.out.print("Enter Product Name: ");
+ String name = sc.nextLine();
+ System.out.print("Enter Product Price: ");
+ double price = sc.nextDouble();
+ if (price < 0) {
+ System.out.println("Price cannot be negative!");
+ break;
+ }
+ products.add(new Product(id, name, price));
+ System.out.println("Product added successfully!");
+ break;
+ }
+ case 2: {
+ System.out.print("Enter Product ID to update: ");
+ int id = sc.nextInt();
+ boolean found = false;
+ for (Product p : products) {
+ if (p.id == id) {
+ System.out.print("Enter new price: ");
+ double newPrice = sc.nextDouble();
+if (newPrice < 0) {
+ System.out.println("Price cannot be negative!");
+ } else {
+ p.price = newPrice;
+ System.out.println("Price updated successfully!");
+ }
+ found = true;
+ break;
+ }
+ }
+ if (!found) {
+ System.out.println("Product not found!");
+ }
+ break;
+ }
+ case 3: {
+ System.out.print("Enter Product ID to remove: ");
+ int id = sc.nextInt();
+ boolean removed = false;
+ for (int i = 0; i < products.size(); i++) {
+ if (products.get(i).id == id) {
+ products.remove(i);
+ removed = true;
+break;
+ }
+ }
+ if (removed) {
+ System.out.println("Product removed successfully!");
+ } else {
+ System.out.println("Product not found!");
+ }
+ break;
+ }
+ case 4:
+ displayProducts(products);
+ break;
+ case 5:
+ Collections.sort(products, new PriceComparator());
+ System.out.println("Products sorted by price!");
+ displayProducts(products);
+ break;
+ case 6:
+ Collections.sort(products, new NameComparator());
+ System.out.println("Products sorted by name!");
+ displayProducts(products);
+ break;
+case 7:
+ System.out.println("Exiting inventory system...");
+ break;
+ default:
+ System.out.println("Invalid choice! Try again.");
+ }
+ } while (choice != 7);
+ sc.close();
+ }
+ // Display all products
+ static void displayProducts(ArrayList<Product> products) {
+ if (products.isEmpty()) {
+ System.out.println("Inventory is empty!");
+ return;
+ }
+ System.out.println("\nID\tName\tPrice");
+ for (Product p : products) {
+ p.display();
+ }
+ }
+}
+Output :
+--- Product Inventory Management ---
+1. Add Product
+2. Update Product Price
+3. Remove Product
+4. Display Products
+5. Sort by Price
+6. Sort by Name
+7. Exit
+Enter your choice: 1
+Enter Product ID: 101
+Enter Product Name: Laptop
+Enter Product Price: 50000
+Product added successfully.
